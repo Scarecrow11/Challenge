@@ -10,7 +10,10 @@ const connection = mysql.createConnection({
     database: database
 });
 
-const responseDB = (error, results)=> (error) ?  { status: false, data: 'Error in query', error: error } : { status: true, data: results };
-const updateResDB = (error, results)=> (error) ?  { status: false, data: 'Error in query', error: error } : {};
+setTimeout(()=>connection.query(`select 1`),
+5000);
+
+const responseDB = (error, results) => (error) ? { status: false, data: 'Error in query', error: error } : { status: true, data: results };
+const updateResDB = (error, results) => (error) ? { status: false, data: 'Error in query', error: error } : {};
 
 export { connection, responseDB, updateResDB }

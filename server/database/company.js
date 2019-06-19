@@ -4,10 +4,8 @@ const company = express.Router();
 
 company.get('/', (req, res) => {
     connection.query({
-        sql: [
-            'SELECT id, name',
-            'FROM test2.company;'
-        ].join(' ')
+        sql: `SELECT id, name 
+        FROM company;`
     }, (error, results, fields) => res.send(responseDB(error, results)))
 });
 

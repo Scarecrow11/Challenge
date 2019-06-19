@@ -12,6 +12,7 @@ const config = {
 };
 
 const rateApi = 'https://api.cryptonator.com/api/ticker/';
+
 const typeAuth = 'Basic';
 const tokens = [
     'YWxhZGRpbjpvcGVuc2VzYW1l',
