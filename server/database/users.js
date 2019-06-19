@@ -1,21 +1,18 @@
 import express from 'express';
 import { tryParseInt } from '../utilities/utilities';
-import { connection } from '../database/connection';
+import { connection, responseDB } from '../database/connection';
+import { checkCompanyID } from './utilities';
 const users = express.Router();
 
-users.get('/', (req, res) => {
-    if (tryParseInt(req.query.companyId, false)) {
-         
+users.get('/:companyId', checkCompanyID, (req, res) => {
         connection.query({
-            sql: 'SELECT * FROM test2.users where company_id = ? ;',
-            values: [req.query.companyId]
-        }, (error, results, fields) => (error)
-            ? res.send({ status: false, data: 'Error in query', error: error })
-            : res.send({ status: true, data: results }));
-        
-    } else {
-        res.send({ status: false, data: 'Error in request', error: 'Error - options id is undefined' });
-    }
+            sql: [
+                'SELECT *',
+                'FROM test2.users',
+                'WHERE company_id = ? ;'
+            ].join(' '),
+            values: [req.params.companyId]
+        }, (error, results, fields) => res.send(responseDB(error, results)));
 });
 
 export { users };

@@ -15,6 +15,21 @@ const requestGet = (url, body) => {
     .catch((error) => { return { status: false, data: 'Error in load page, please refresh', error: error } });
 };
 
+const requestGetNonAuth = (url, body) => {
+  return axios.get(url,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Authorization': 'Basic YWxhZGRpb222GVuc2VzYW1l'
+      },
+      params: body
+    })
+    .then((response) => { return response.data })
+    .catch((error) => { return { status: false, data: 'Error in load page, please refresh', error: error } });
+};
+
 
 const requestPost = (url, body) => {
   return axios.post(url,
@@ -63,4 +78,4 @@ const requestDelete = (url, body) => {
     .catch((error) => { return { status: false, data: 'Error in load page, please refresh', error: error } });
 }
 
-export { requestGet, requestPost, requestPut, requestDelete };
+export { requestGet, requestPost, requestPut, requestDelete, requestGetNonAuth };

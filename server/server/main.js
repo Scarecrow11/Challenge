@@ -2,10 +2,10 @@ import socketIo from 'socket.io';
 import express from 'express';
 import http from 'http';
 import cors from 'cors';
-import { ioConnection } from './socket';
-import { router } from '../config/router';
-import { config } from '../config/main';
 import bodyParser from 'body-parser';
+import { ioConnection } from './socket';
+import { router } from '../routes/router';
+import { config } from '../config/main';
 
 const app = express();
 const server = http.createServer(app);
