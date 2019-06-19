@@ -1,31 +1,31 @@
 import express from 'express';
 import { connection, responseDB, updateResDB } from './connection';
 import { tryParseFloat, tryParseInt } from '../utilities/utilities';
-import { checkCompanyID, checkUserID } from './utilities';
+import { checkID } from './utilities';
 
 const history = express.Router();
 
-history.get('/users/:userId', checkUserID, (req, res) => {
+history.get('/users/:id', checkID, (req, res) => {
     connection.query({
         sql: `SELECT ac.name as base, ac2.name as desired, eh.rate as rate, eh.amount as amount, created_at 
         FROM exchange_history as eh 
         INNER JOIN available_currency as ac ON eh.base_id=ac.id 
         INNER JOIN available_currency as ac2 on eh.desired_id = ac2.id 
         WHERE eh.user_id= ? and delete_at is null;`,
-        values: [req.params.userId]
+        values: [req.params.id]
     }, (error, results, fields) => res.send(responseDB(error, results)));
 });
 
-history.get('/users/count/:userId', checkUserID, (req, res) => {
+history.get('/users/:id/count', checkID, (req, res) => {
     connection.query({
         sql: `SELECT count(*) as count 
         FROM exchange_history 
         WHERE user_id= ? and delete_at is null;`,
-        values: [req.params.userId]
+        values: [req.params.id]
     }, (error, results, fields) => res.send(responseDB(error, results)));
 });
 
-history.get('/companies/:companyId', checkCompanyID, (req, res) => {
+history.get('/companies/:id', checkID , (req, res) => {
     connection.query({
         sql: `SELECT u.id as user_id, u.name as username, ac.name as base, ac2.name as desired, eh.rate as rate, eh.amount as amount, created_at 
         FROM exchange_history as eh 
@@ -33,17 +33,17 @@ history.get('/companies/:companyId', checkCompanyID, (req, res) => {
         INNER JOIN available_currency as ac2 ON eh.desired_id=ac2.id 
         INNER JOIN users as u ON eh.user_id=u.id 
         WHERE u.company_id= ? and delete_at is null;`,
-        values: [req.params.companyId]
+        values: [req.params.id]
     }, (error, results, fields) => res.send(responseDB(error, results)));
 });
 
-history.get('/companies/count/:companyId', checkCompanyID, (req, res) => {
+history.get('/companies/:id/count', checkID, (req, res) => {
     connection.query({
         sql: `SELECT count(*) as count 
         FROM exchange_history as eh 
         INNER JOIN users as u ON eh.user_id=u.id 
         WHERE u.company_id= ? and delete_at is null;`,
-        values: [req.params.companyId]
+        values: [req.params.id]
     }, (error, results, fields) => res.send(responseDB(error, results)));
 });
 
@@ -62,14 +62,14 @@ history.post('/', (req, res) => {
     }
 })
 
-history.put('/', (req, res) => {
+history.put('/:id', (req, res) => {
     const { id, amount } = req.body;
     if (tryParseInt(id, false) && tryParseFloat(amount, false)) {
 
         connection.query({
             sql: `UPDATE exchange_history 
             SET amount=?, update_at=now() 
-            WHERE id=?;`,
+            WHERE id=? and delete_at is null;`,
             values: [amount, id]
         }, (error, results, fields) => res.send(updateResDB(error, results)));
     } else {
@@ -77,12 +77,12 @@ history.put('/', (req, res) => {
     }
 });
 
-history.delete('/', (req, res) => {
+history.delete('/:id', (req, res) => {
     if (tryParseInt(req.body.id, false)) {
         connection.query({
             sql: `UPDATE exchange_history 
             SET delete_at=now() 
-            WHERE id=?;`,
+            WHERE id=? and delete_at is null;`,
             values: [req.body.id]
         }, (error, results, fields) => res.send(updateResDB(error, results)));
     } else {
