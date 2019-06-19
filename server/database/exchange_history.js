@@ -1,11 +1,11 @@
 import express from 'express';
 import { connection, responseDB, updateResDB } from './connection';
 import { tryParseFloat, tryParseInt } from '../utilities/utilities';
-import { checkID } from './utilities';
+import { checkID, checkAuth } from './utilities';
 
 const history = express.Router();
 
-history.get('/users/:id', checkID, (req, res) => {
+history.get('/users/:id', [checkAuth, checkID], (req, res) => {
     connection.query({
         sql: `SELECT ac.name as base, ac2.name as desired, eh.rate as rate, eh.amount as amount, created_at 
         FROM exchange_history as eh 
@@ -16,7 +16,7 @@ history.get('/users/:id', checkID, (req, res) => {
     }, (error, results, fields) => res.send(responseDB(error, results)));
 });
 
-history.get('/users/:id/count', checkID, (req, res) => {
+history.get('/users/:id/count', [checkAuth, checkID], (req, res) => {
     connection.query({
         sql: `SELECT count(*) as count 
         FROM exchange_history 
@@ -25,7 +25,7 @@ history.get('/users/:id/count', checkID, (req, res) => {
     }, (error, results, fields) => res.send(responseDB(error, results)));
 });
 
-history.get('/companies/:id', checkID , (req, res) => {
+history.get('/companies/:id', [checkAuth, checkID], (req, res) => {
     connection.query({
         sql: `SELECT u.id as user_id, u.name as username, ac.name as base, ac2.name as desired, eh.rate as rate, eh.amount as amount, created_at 
         FROM exchange_history as eh 
@@ -37,7 +37,7 @@ history.get('/companies/:id', checkID , (req, res) => {
     }, (error, results, fields) => res.send(responseDB(error, results)));
 });
 
-history.get('/companies/:id/count', checkID, (req, res) => {
+history.get('/companies/:id/count', [checkAuth, checkID], (req, res) => {
     connection.query({
         sql: `SELECT count(*) as count 
         FROM exchange_history as eh 
@@ -47,7 +47,7 @@ history.get('/companies/:id/count', checkID, (req, res) => {
     }, (error, results, fields) => res.send(responseDB(error, results)));
 });
 
-history.post('/', (req, res) => {
+history.post('/', checkAuth, (req, res) => {
     const { userId, baseCurrencyId, desiredCurrencyId, amount, rate } = req.body;
 
     if (tryParseInt(userId, false) && tryParseInt(baseCurrencyId, false) && tryParseInt(desiredCurrencyId, false) && tryParseFloat(amount, false) && tryParseFloat(rate, false)) {
@@ -62,7 +62,7 @@ history.post('/', (req, res) => {
     }
 })
 
-history.put('/:id', (req, res) => {
+history.put('/:id', checkAuth, (req, res) => {
     const { id, amount } = req.body;
     if (tryParseInt(id, false) && tryParseFloat(amount, false)) {
 
@@ -77,7 +77,7 @@ history.put('/:id', (req, res) => {
     }
 });
 
-history.delete('/:id', (req, res) => {
+history.delete('/:id', checkAuth, (req, res) => {
     if (tryParseInt(req.body.id, false)) {
         connection.query({
             sql: `UPDATE exchange_history 
