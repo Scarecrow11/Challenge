@@ -34,32 +34,32 @@ Added new queries to work with the database
 - returns the entire list of companies from the database
 - available to all users
 
+#### get /v2/companies/:id/histories
+- returns the operations in the history of the company by its id
+- available only to authorized users
+- check input id
+
+#### get /v2/companies/:id/histories/count
+- returns the number of transactions performed in the history of the company by its id
+- available only to authorized users
+- check input id
+
 #### get /v2/currencies
 - returns the entire list of available currencies
 - available only to authorized users
 
 #### get /v2/users/:id
-- returns a list of users owned by the company
+- returns a list of users owned by the company id
 - available only to authorized users
 - check input id
 
-#### get /v2/histories/users/:id
+#### get /v2/users/:id/histories
 - returns the user's history by his id
 - available only to authorized users
 - check input id
 
-#### get /v2/histories/users/:id/count
+#### get /v2/users/:id/histories/count
 - returns the number of operations performed in the user’s history by its id
-- available only to authorized users
-- check input id
-
-#### get /v2/histories/companies/:id
-- returns the operations in the history of the company by its id
-- available only to authorized users
-- check input id
-
-#### get /v2/histories/companies/:id/count
-- returns the number of transactions performed in the history of the company by its id
 - available only to authorized users
 - check input id
 

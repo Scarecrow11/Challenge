@@ -1,17 +1,17 @@
 import express from 'express';
-import { history } from '../database/exchange_history';
+import { histories } from '../database/exchange_history';
 import { users } from '../database/users';
-import { company } from '../database/company';
-import { currency } from '../database/currency';
+import { companies } from '../database/companies';
+import { currencies } from '../database/currencies';
 
 const v2 = express.Router();
 
-v2.use('/companies', company);
+v2.use('/companies', companies);
 
-v2.use('/currencies', currency);
+v2.use('/currencies', currencies);
 
 v2.use('/users', users);
 
-v2.use('/histories', history);
+v2.use('/histories', histories);
 
 export { v2 };
