@@ -1,5 +1,5 @@
 import { convert } from '../convert/convert';
-import { tryParseFloat } from '../utilities/utilities';
+import { parseFloat } from '../utilities/main';
 
 const ioConnection = (socket) => {
     console.info(`Client connected [id=${socket.id}]`);
@@ -10,7 +10,7 @@ const ioConnection = (socket) => {
     });
 
     socket.on('convert', (baseCurrency, desiredCurrency, amount) => {
-        let isNumber = tryParseFloat(amount, false);
+        let isNumber = parseFloat(amount);
         if (isNumber) {
             socket.emit('convert_res', { status: true, data: 'Please wait, check exchange rates' });
             convert(baseCurrency, desiredCurrency, isNumber).then(response =>

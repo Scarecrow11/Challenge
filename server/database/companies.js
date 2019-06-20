@@ -1,24 +1,24 @@
 import express from 'express';
 import { connection, responseDB } from './connection';
-import { checkAuth, checkID } from '../utilities/utilities';
+import { checkAuth, checkID } from '../utilities/main';
 
 const companies = express.Router();
 
 companies.get('/', (req, res) => {
     connection.query({
         sql: `SELECT id, name 
-        FROM company;`
+        FROM companies;`
     }, (error, results, fields) => res.send(responseDB(error, results)))
 });
 
 companies.get('/:id/histories', [checkAuth, checkID], (req, res) => {
     connection.query({
-        sql: `SELECT u.id as user_id, u.name as username, ac.name as base, ac2.name as desired, eh.rate as rate, eh.amount as amount, created_at 
-        FROM exchange_history as eh 
-        INNER JOIN available_currency as ac ON eh.base_id=ac.id 
-        INNER JOIN available_currency as ac2 ON eh.desired_id=ac2.id 
-        INNER JOIN users as u ON eh.user_id=u.id 
-        WHERE u.company_id= ? and delete_at is null;`,
+        sql: `SELECT u.id as user_id, u.name as username, base.name as base, des.name as desired, h.rate, h.amount, created_at 
+        FROM histories as h 
+        INNER JOIN currencies as base ON h.base_id=base.id 
+        INNER JOIN currencies as des ON h.desired_id=des.id 
+        INNER JOIN users as u ON h.user_id=u.id 
+        WHERE u.companies_id= ? and delete_at is null;`,
         values: [req.params.id]
     }, (error, results, fields) => res.send(responseDB(error, results)));
 });
@@ -26,9 +26,9 @@ companies.get('/:id/histories', [checkAuth, checkID], (req, res) => {
 companies.get('/:id/histories/count', [checkAuth, checkID], (req, res) => {
     connection.query({
         sql: `SELECT count(*) as count 
-        FROM exchange_history as eh 
-        INNER JOIN users as u ON eh.user_id=u.id 
-        WHERE u.company_id= ? and delete_at is null;`,
+        FROM histories as h 
+        INNER JOIN users as u ON h.user_id=u.id 
+        WHERE u.companies_id= ? and delete_at is null;`,
         values: [req.params.id]
     }, (error, results, fields) => res.send(responseDB(error, results)));
 });

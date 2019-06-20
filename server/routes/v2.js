@@ -1,5 +1,5 @@
 import express from 'express';
-import { histories } from '../database/exchange_history';
+import { histories } from '../database/histories';
 import { users } from '../database/users';
 import { companies } from '../database/companies';
 import { currencies } from '../database/currencies';

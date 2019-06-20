@@ -6,7 +6,7 @@ const currencies = express.Router();
 currencies.get('/', checkAuth, (req, res) => {
     connection.query({
         sql: `SELECT * 
-        FROM available_currency;`
+        FROM currencies;`
     }, (error, results, fields) => res.send(responseDB(error, results)));
 });
 

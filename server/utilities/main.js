@@ -1,11 +1,11 @@
 import { tokens, typeAuth } from '../config/main'
 
 // function for check string
-const tryParseFloat = (str, defaultValue) => (new Boolean(str)) ? parseFloat(str) : defaultValue;
+const parseFloat = (str) => (new Boolean(str)) ? parseFloat(str) : false;
 
-const tryParseInt= (str, defaultValue) => (new Boolean(str)) ? parseInt(str) : defaultValue;
+const parseInt= (str) => (new Boolean(str)) ? parseInt(str) : false;
 
-const checkID = (req, res, next) => (tryParseInt(req.params.id, false)) ? next()
+const checkID = (req, res, next) => (parseInt(req.params.id)) ? next()
     : res.send({ status: false, data: 'Wrong option', error: 'Got type error in options' })
 
 const checkAuth = (req, res, next) => {
@@ -14,4 +14,4 @@ const checkAuth = (req, res, next) => {
     (type === typeAuth && tokens.includes(token)) ? next() : res.send({ status: false, data: 'Error in load date', error: 'Error in authorization token' });
 };
 
-export { tryParseInt, tryParseFloat, checkID, checkAuth };
+export { parseInt, parseFloat, checkID, checkAuth };

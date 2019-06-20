@@ -65,7 +65,7 @@ Added new queries to work with the database
 
 #### post /v2/histories/
 - adds a new entry to the database
-- expects userId, baseCurrencyId, desiredCurrencyId, amount, rate
+- expects userId, baseCurrencyId, desiredCurrencyId, amount, rate, total
 - available only to authorized users
 - check the input parameters
 
