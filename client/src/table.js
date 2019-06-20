@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import config from './config';
-import { requestGet, requestPost, requestPut, requestDelete } from './services';
+import { requestGet, requestPost, requestPut, requestDelete, requestGetNonAuth } from './services';
 
 const socket = io(config.defaultUrl);
 
@@ -48,38 +48,6 @@ class Table extends React.Component {
       }
     });
 
-    requestGet(config.defaultUrl + '/v2/company',{}).then(res => {
-      console.log('company', res);
-    });
-
-     requestGet(config.defaultUrl + '/v2/users', { companyId : 2 }).then(res => {
-      console.log('company users', res);
-    });
-
-    requestGet(config.defaultUrl + '/v2/history', { count: true, userId : 1}).then(res => {
-      console.log('history user get', res);
-    });
-    requestGet(config.defaultUrl + '/v2/history', { count: false, userId : 3}).then(res => {
-      console.log('history user get', res);
-    });
-    requestGet(config.defaultUrl + '/v2/history', { count: true, companyId : 1}).then(res => {
-      console.log('history company get', res);
-    });
-    requestGet(config.defaultUrl + '/v2/history', { count: false, companyId : 3}).then(res => {
-      console.log('history company get', res);
-    });
-          /// userId, baseCurrencyId, desiredCurrencyId, amount, rate
-    requestPost(config.defaultUrl + '/v2/history', { userId: 3, baseCurrencyId: 2, desiredCurrencyId: 5, amount: 51.3333, rate: 100 }).then(res => {
-      console.log('history post', res);
-    });
-
-    requestPut(config.defaultUrl + '/v2/history', { id: 3, amount: 25 }).then(res => {
-      console.log('history put', res);
-    });
-
-    requestDelete(config.defaultUrl + '/v2/history', {id:4,}).then(res => {
-      console.log('history del', res);
-    });
   }
 
   handleChange(event) {

@@ -10,4 +10,7 @@ const connection = mysql.createConnection({
     database: database
 });
 
-export { connection }
+const responseDB = (error, results) => (error) ? { status: false, data: 'Error in query', error: error } : { status: true, data: results };
+const updateResDB = (error, results) => (error) ? { status: false, data: 'Error in query', error: error } : { status: true, data: {} };
+
+export { connection, responseDB, updateResDB }

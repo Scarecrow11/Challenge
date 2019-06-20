@@ -1,5 +1,5 @@
 import express from 'express';
-import { currencies, tokens, typeAuth } from './main';
+import { currencies, tokens, typeAuth } from '../config/main';
 const v1 = express.Router();
 
 v1.use('/',(req, res, next) => {
