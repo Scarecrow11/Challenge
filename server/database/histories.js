@@ -4,17 +4,15 @@ import { parseFloat, parseInt, checkAuth } from '../utilities/main';
 
 const histories = express.Router();
 
-histories.get('/total/:base_id/:des_id', checkAuth, (req, res) => {
-    if (parseInt(req.params.base_id) && parseInt(req.params.base_id)) {
+histories.get('/total/:base_name/:des_name', checkAuth, (req, res) => {
         connection.query({
-            sql: `SELECT sum(total) as total
-                FROM histories
-                WHERE base_id = ? and desired_id = ?`,
-            values: [req.params.base_id, req.params.base_id]
+            sql: `SELECT base.name as base, des.name as desired, sum(total) as total
+            FROM histories as h
+            INNER JOIN currencies as base ON h.base_id=base.id
+            INNER JOIN currencies as des ON h.desired_id=des.id
+            WHERE base.name=? and des.name= ?`,
+            values: [req.params.base_name, req.params.base_name]
         }, (error, results, fields) => res.send(responseDB(error, results)));
-    } else {
-        res.send({ status: false, data: 'Wrong option', error: 'Got type error in options' });
-    }
 })
 
 histories.post('/', checkAuth, (req, res) => {
