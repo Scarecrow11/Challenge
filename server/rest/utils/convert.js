@@ -1,5 +1,5 @@
 import request from 'request-promise';
-import { rateApi }from '../config/main';
+import { rateApi }from '../../config/main';
 
 // function for set responce for client
 const getCurrency = (data, amount) => (data.success) ?

@@ -1,5 +1,5 @@
-import { convert } from '../convert/convert';
-import { tryParseFloat } from '../utilities/utilities';
+import { convert } from '../rest/utils/convert';
+import { tryParseFloat } from '../rest/utils/parsers';
 
 const ioConnection = (socket) => {
     console.info(`Client connected [id=${socket.id}]`);
@@ -10,11 +10,11 @@ const ioConnection = (socket) => {
     });
 
     socket.on('convert', (baseCurrency, desiredCurrency, amount) => {
-        let isNumber = tryParseFloat(amount, false);
+        let isNumber = tryParseFloat(amount);
         if (isNumber) {
             socket.emit('convert_res', { status: true, data: 'Please wait, check exchange rates' });
-            convert(baseCurrency, desiredCurrency, isNumber).then(response =>
-                socket.emit('convert_res', response));
+            convert(baseCurrency, desiredCurrency, isNumber)
+                .then(response => socket.emit('convert_res', response));
         } else {
             socket.emit('convert_res', { status: false, data: 'Got error, value is not number', error: 'Exception: variable has non-numeric type' });
         }
